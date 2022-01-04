@@ -41,8 +41,6 @@ paths:
       description: |
         Returns list of all user accounts.
       parameters: []
-    parameters: []
-  '/users/{userId}':
     post:
       summary: Create New User
       operationId: post-user
@@ -332,6 +330,8 @@ paths:
                   customFields: {}
         description: Post the necessary fields for the API to create a new user.
       description: Create a new user.
+    parameters: []
+  '/users/{userId}':
     delete:
       summary: ''
       operationId: delete-user
@@ -441,15 +441,12 @@ paths:
                     verified: true
                     customFields: {}
               properties:
-                userId:
-                  type: string
                 data:
                   $ref: '#/components/schemas/User'
               required:
-                - userId
                 - data
       description: Updates user with the specified `userId`
-  /users/avatar:
+  '/users/{userId}/avatar':
     get:
       summary: getUserAvatar
       tags: []
@@ -480,13 +477,7 @@ paths:
                     statusCode: 307
                     body: avatar-url.png
       operationId: get-users-avatar
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          description: Id / username of the user.
-          required: true
+      parameters: []
     delete:
       summary: ''
       operationId: delete-users-avatar
@@ -627,7 +618,13 @@ paths:
               required:
                 - avatarUrl
       description: 'Sets avatar picture for user with specified `userId` / `username`. If no user is specified, sets avatar for caller.'
-  /users/active-status:
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+  '/users/{userId}/active-status':
     post:
       summary: ''
       operationId: post-users-active-status
@@ -672,25 +669,27 @@ paths:
             schema:
               description: ''
               type: object
-              properties:
-                userId:
-                  type: string
-                activeStatus:
-                  type: boolean
-                confirmRelinquish:
-                  type: boolean
-              required:
-                - userId
-                - activeStatus
-                - confirmRelinquish
               x-examples:
                 example-1:
                   userId: ''
                   activeStatus: true
                   confirmRelinquish: true
+              properties:
+                activeStatus:
+                  type: boolean
+                confirmRelinquish:
+                  type: boolean
+              required:
+                - activeStatus
+                - confirmRelinquish
       description: Sets the active status of the user.
-    parameters: []
-  /users/deactivate-idle:
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+  '/users/{userId}/deactivate-idle':
     post:
       summary: deactivateIdleUsers
       tags: []
@@ -754,14 +753,14 @@ paths:
                 example-1:
                   daysIdle: 2
                   role: ''
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          description: Id / username of the user.
-          required: true
-  /users/presence:
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+  '/users/{userId}/presence':
     get:
       summary: getUserPresence
       tags: []
@@ -810,305 +809,18 @@ paths:
       parameters:
         - schema:
             type: string
-          in: query
-          name: userId / username
-          description: 'Id / username of the user. '
-        - schema:
-            type: string
             format: date
             default: ISO 8601 datetime
           in: query
           name: from
           description: 'Returns results whose last date they got a status change is after the specified value. '
       description: 'Returns presence of user with specified `userId` / `username`. If no user is specified, returns all users'' presence.'
-  /users/info:
-    get:
-      summary: getUsersInfo
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  user:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                        minLength: 1
-                      createdAt:
-                        type: string
-                        minLength: 1
-                      services:
-                        type: object
-                        properties:
-                          password:
-                            type: object
-                            properties:
-                              bcrypt:
-                                type: string
-                                minLength: 1
-                            required:
-                              - bcrypt
-                          email:
-                            type: object
-                            properties:
-                              verificationTokens:
-                                type: array
-                                uniqueItems: true
-                                minItems: 1
-                                items:
-                                  required:
-                                    - token
-                                    - address
-                                    - when
-                                  properties:
-                                    token:
-                                      type: string
-                                      minLength: 1
-                                    address:
-                                      type: string
-                                      minLength: 1
-                                    when:
-                                      type: string
-                                      minLength: 1
-                            required:
-                              - verificationTokens
-                          resume:
-                            type: object
-                            properties:
-                              loginTokens:
-                                type: array
-                                uniqueItems: true
-                                minItems: 1
-                                items:
-                                  required:
-                                    - when
-                                    - hashedToken
-                                  properties:
-                                    when:
-                                      type: string
-                                      minLength: 1
-                                    hashedToken:
-                                      type: string
-                                      minLength: 1
-                            required:
-                              - loginTokens
-                        required:
-                          - password
-                          - email
-                          - resume
-                      emails:
-                        type: array
-                        uniqueItems: true
-                        minItems: 1
-                        items:
-                          required:
-                            - address
-                            - verified
-                          properties:
-                            address:
-                              type: string
-                              minLength: 1
-                            verified:
-                              type: boolean
-                      type:
-                        type: string
-                        minLength: 1
-                      status:
-                        type: string
-                        minLength: 1
-                      active:
-                        type: boolean
-                      roles:
-                        type: array
-                        items:
-                          required: []
-                          properties: {}
-                      name:
-                        type: string
-                        minLength: 1
-                      lastLogin:
-                        type: string
-                        minLength: 1
-                      statusConnection:
-                        type: string
-                        minLength: 1
-                      utcOffset:
-                        type: number
-                      username:
-                        type: string
-                        minLength: 1
-                      avatarETag:
-                        type: string
-                        minLength: 1
-                    required:
-                      - _id
-                      - createdAt
-                      - services
-                      - emails
-                      - type
-                      - status
-                      - active
-                      - roles
-                      - name
-                      - lastLogin
-                      - statusConnection
-                      - utcOffset
-                      - username
-                      - avatarETag
-                  success:
-                    type: boolean
-                required:
-                  - user
-                  - success
-                x-examples:
-                  example-1:
-                    user:
-                      _id: nSYqWzZ4GsKTX4dyK
-                      createdAt: '2016-12-07T15:47:46.861Z'
-                      services:
-                        password:
-                          bcrypt: ...
-                        email:
-                          verificationTokens:
-                            - token: ...
-                              address: example@example.com
-                              when: '2016-12-07T15:47:46.930Z'
-                        resume:
-                          loginTokens:
-                            - when: '2016-12-07T15:47:47.334Z'
-                              hashedToken: ...
-                      emails:
-                        - address: example@example.com
-                          verified: true
-                      type: user
-                      status: offline
-                      active: true
-                      roles:
-                        - user
-                      name: Example User
-                      lastLogin: '2016-12-08T00:22:15.167Z'
-                      statusConnection: offline
-                      utcOffset: 0
-                      username: example
-                      avatarETag: thwftThP3Band942S
-                    success: true
-              examples:
-                Example with no room fields made by regular user.:
-                  value:
-                    user:
-                      _id: string
-                      type: string
-                      status: string
-                      active: true
-                      name: string
-                      utcOffset: 0
-                      username: string
-                      avatarETag: string
-                    success: true
-                Example with no room fields made by admin.:
-                  value:
-                    user:
-                      _id: nSYqWzZ4GsKTX4dyK
-                      createdAt: '2016-12-07T15:47:46.861Z'
-                      services:
-                        password:
-                          bcrypt: ...
-                        email:
-                          verificationTokens:
-                            - token: ...
-                              address: example@example.com
-                              when: '2016-12-07T15:47:46.930Z'
-                        resume:
-                          loginTokens:
-                            - when: '2016-12-07T15:47:47.334Z'
-                              hashedToken: ...
-                      emails:
-                        - address: example@example.com
-                          verified: true
-                      type: user
-                      status: offline
-                      active: true
-                      roles:
-                        - user
-                      name: Example User
-                      lastLogin: '2016-12-08T00:22:15.167Z'
-                      statusConnection: offline
-                      utcOffset: 0
-                      username: example
-                      avatarETag: thwftThP3Band942S
-                    success: true
-                'Example with room fields called by admin ':
-                  value:
-                    user:
-                      _id: nSYqWzZ4GsKTX4dyK
-                      createdAt: '2016-12-07T15:47:46.861Z'
-                      services:
-                        password:
-                          bcrypt: ...
-                        email:
-                          verificationTokens:
-                            - token: ...
-                              address: example@example.com
-                              when: '2016-12-07T15:47:46.930Z'
-                        resume:
-                          loginTokens:
-                            - when: '2016-12-07T15:47:47.334Z'
-                              hashedToken: ...
-                      emails:
-                        - address: example@example.com
-                          verified: true
-                      type: user
-                      status: offline
-                      active: true
-                      roles:
-                        - user
-                      name: Example User
-                      lastLogin: '2016-12-08T00:22:15.167Z'
-                      statusConnection: offline
-                      utcOffset: 0
-                      username: example
-                      avatarETag: thwftThP3Band942S
-                      rooms:
-                        - _id: PoffwDEebAwcmS5A8
-                          rid: GENERAL
-                          name: general
-                          t: c
-                          unread: 1
-                        - _id: hr93s8GcJedZbkeaH
-                          rid: oaqXoFLru3YLuau2J
-                          name: test
-                          t: c
-                          unread: 1
-                          roles:
-                            - owner
-                    success: true
-            application/xml:
-              schema:
-                type: object
-                properties: {}
-      operationId: get-users-info
-      description: |-
-        Returns user info of user with specified `userId`/`username`.
-        The returned user info is determined by the caller's role.
-
-        Optional: if `fields` is specified as a query parameter with `{'userRooms': 1}`, the response also returns all the rooms the user is in.
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          required: true
-          description: Id / username of the user.
-        - schema: {}
-          in: query
-          name: fields
-          description: 'If `{userRooms'': 1}`, returns array of rooms the user is in.'
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
   /users/register:
     post:
       summary: registerUser
@@ -1228,7 +940,7 @@ paths:
                   email: roger@example.com
                   pass: passw0rd
                   name: Roger Smith
-  /users/status:
+  '/users/{userId}/status':
     get:
       summary: getUserStatus
       tags: []
@@ -1271,13 +983,8 @@ paths:
                     status: away
                     success: true
       operationId: get-users-status
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          description: Id / username of user.
-      description: 'Returns status of user with the specified `userId` / `username`. If no `userId` / `username` exists, returns stauts or caller.'
+      parameters: []
+      description: 'Returns status of user with the specified `userId`. If no `userId` exists, returns stauts or caller.'
     post:
       summary: setUserStatus
       tags: []
@@ -1342,6 +1049,12 @@ paths:
           in: query
           name: userId / username
           description: Id / username of the user.
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
   /users/basic-info:
     post:
       summary: updateOwnBasicInfo
@@ -1422,7 +1135,7 @@ paths:
                       minLength: 1
               required:
                 - data
-  /users/create-token:
+  '/users/{userId}/create-token':
     post:
       summary: ''
       operationId: post-users-create-token
@@ -1430,13 +1143,13 @@ paths:
         '200':
           description: OK
       description: To be able to use this endpoint you must set the `ENV VAR (CREATE_TOKENS_FOR_USERS=true)`.
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          description: Id / username of the user
-          required: true
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
   /users/preferences:
     get:
       summary: getUserPreference
@@ -2664,7 +2377,7 @@ paths:
                   example-1:
                     success: true
       operationId: post-users-remove-other-tokens
-  /users/reset-e2e-key:
+  '/users/{userId}/reset-e2e-key':
     post:
       summary: resetE2EKey
       tags: []
@@ -2685,14 +2398,14 @@ paths:
                   example-1:
                     success: true
       operationId: post-users-reset-e2e-key
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          description: Id / username of the user.
-          required: true
-  /users/reset-totp:
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+  '/users/{userId}/reset-totp':
     post:
       summary: resetTOTP
       tags: []
@@ -2713,15 +2426,14 @@ paths:
                   example-1:
                     success: true
       operationId: post-users-reset-e2e-key
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId / username
-          description: Id / username of the user.
-          required: true
-    parameters: []
-  /users/teams:
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+  '/users/{userId}/teams':
     get:
       summary: getUserTeams
       tags: []
@@ -2829,7 +2541,13 @@ paths:
               x-examples:
                 example-1:
                   userId: ''
-  /users/logout:
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+  '/users/{userId}/logout':
     post:
       summary: logoutUser
       tags: []
@@ -2875,45 +2593,292 @@ paths:
               x-examples:
                 example-1:
                   userId: ''
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
 components:
   schemas:
     User:
-      title: User
-      type: object
       description: ''
-      examples:
-        - id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
+      type: object
       properties:
-        id:
-          type: integer
-          description: Unique identifier for the given user.
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        dateOfBirth:
-          type: string
-          format: date
-          example: '1997-10-31'
-        emailVerified:
+        user:
+          type: object
+          properties:
+            _id:
+              type: string
+              minLength: 1
+            createdAt:
+              type: string
+              minLength: 1
+            services:
+              type: object
+              properties:
+                password:
+                  type: object
+                  properties:
+                    bcrypt:
+                      type: string
+                      minLength: 1
+                  required:
+                    - bcrypt
+                email2fa:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                    changedAt:
+                      type: string
+                      minLength: 1
+                  required:
+                    - enabled
+                    - changedAt
+                email:
+                  type: object
+                  properties:
+                    verificationTokens:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - token
+                          - address
+                          - when
+                        properties:
+                          token:
+                            type: string
+                            minLength: 1
+                          address:
+                            type: string
+                            minLength: 1
+                          when:
+                            type: string
+                            minLength: 1
+                  required:
+                    - verificationTokens
+                resume:
+                  type: object
+                  properties:
+                    loginTokens:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - when
+                          - hashedToken
+                        properties:
+                          when:
+                            type: string
+                            minLength: 1
+                          hashedToken:
+                            type: string
+                            minLength: 1
+                  required:
+                    - loginTokens
+              required:
+                - password
+                - email2fa
+                - email
+                - resume
+            emails:
+              type: array
+              uniqueItems: true
+              minItems: 1
+              items:
+                required:
+                  - address
+                  - verified
+                properties:
+                  address:
+                    type: string
+                    minLength: 1
+                  verified:
+                    type: boolean
+            type:
+              type: string
+              minLength: 1
+            status:
+              type: string
+              minLength: 1
+            active:
+              type: boolean
+            roles:
+              type: array
+              items:
+                required: []
+                properties: {}
+            name:
+              type: string
+              minLength: 1
+            lastLogin:
+              type: string
+              minLength: 1
+            statusConnection:
+              type: string
+              minLength: 1
+            utcOffset:
+              type: number
+            username:
+              type: string
+              minLength: 1
+            canViewAllInfo:
+              type: boolean
+          required:
+            - _id
+            - createdAt
+            - services
+            - emails
+            - type
+            - status
+            - active
+            - roles
+            - name
+            - lastLogin
+            - statusConnection
+            - utcOffset
+            - username
+            - canViewAllInfo
+        success:
           type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
       required:
-        - id
-        - firstName
-        - lastName
-        - email
-        - emailVerified
+        - user
+        - success
+      x-examples:
+        example-1:
+          user:
+            _id: QToMt7KgHyG7zBefh
+            createdAt: '2021-10-19T14:27:39.580Z'
+            services:
+              password:
+                bcrypt: $2b$10$X1u5g.0mtxOCcwAbU/h9Zu9SFKXSvRs6RdGQ7p/ZhEnuzvDtmo7XG
+              email2fa:
+                enabled: true
+                changedAt: '2021-10-19T14:27:39.580Z'
+              email:
+                verificationTokens:
+                  - token: rd5y-7z1_tARxdfwsTqtOj70DB91x9qsdPn8pU-EJS3
+                    address: a@v.com
+                    when: '2021-10-19T14:27:39.597Z'
+              resume:
+                loginTokens:
+                  - when: '2021-11-29T19:12:43.230Z'
+                    hashedToken: o6ZqaZhFRDfdKGLwnkEoXU4Llsfaek+RQi6MDdgqhwg=
+                  - when: '2021-11-29T19:12:43.322Z'
+                    hashedToken: VHQeM36QvRjsQ4qMGh31+47fycKKd5j4YsBhfqX4sMk=
+                  - when: '2021-11-29T19:16:44.513Z'
+                    hashedToken: mWelZQmES0ICvnprMiPAP9O5mLm8CYM/KQO9UCxj4Vo=
+                  - when: '2021-11-29T19:16:44.600Z'
+                    hashedToken: evNAzvbovbkY6XRpnbVVfKUCXHjiyN6MosmAtzCsefA=
+                  - when: '2021-11-29T19:25:23.093Z'
+                    hashedToken: h8/S4kFHpD8icB11zXCc1cPcr6g28ziXRk3gqhOJAKE=
+                  - when: '2021-11-29T19:25:23.195Z'
+                    hashedToken: NYYe9cPn58Ykq9xBK9Mo0Qk3+FTmBUfl9VFcDY33xgU=
+                  - when: '2021-11-29T19:46:32.633Z'
+                    hashedToken: Z5O25w6vv9sRg7nGJCdl8pO0VwJVcaI5wumVv0p13Sc=
+                  - when: '2021-11-29T19:46:32.884Z'
+                    hashedToken: Uy3vvi3nQkZHGzwRrzrKVYHlOB68+pNP3pP7M+r5ZPg=
+                  - when: '2021-11-30T11:51:15.361Z'
+                    hashedToken: 6pLMj6fwXYVbfqDEcgR7LcI7P9kp8l7YR57I8ahsaDQ=
+                  - when: '2021-11-30T11:51:15.468Z'
+                    hashedToken: n4SzKH+K9Um0Wj8v2SMwmgyJiHOL4khwBcLWp3o+QE8=
+                  - when: '2021-11-30T11:53:56.616Z'
+                    hashedToken: mm1H89OmU78ROhJ5ED5+TrKx0v4/WhN0nmg0aV3hdhc=
+                  - when: '2021-11-30T11:53:56.715Z'
+                    hashedToken: V/dgLeq/12UyPqs9mt2rNGPnIe5VN/PJ+VzQCB+AI5U=
+                  - when: '2021-11-30T11:59:41.899Z'
+                    hashedToken: +HpAOvSgVsrOPqROG1DUsch5pM/OdwsdBvZ2wg3AFB8=
+                  - when: '2021-11-30T12:16:35.470Z'
+                    hashedToken: OZ6YilHQid2wfVRdSdqVbWlItOevTGOb4j0aYWAUllw=
+                  - when: '2021-11-30T12:16:35.561Z'
+                    hashedToken: c42cYAH56X3mFDYnnuYNVssr5159boBkOheQvgIaZO0=
+                  - when: '2021-11-30T12:18:05.633Z'
+                    hashedToken: md33HrpmOt2drUvX9kxe8nMqop9edCHXVq2If6o6TFI=
+                  - when: '2021-11-30T12:18:05.731Z'
+                    hashedToken: 8DayeG6GygKhVFM+c0dg2bcFplQeY7k3pIzigfTBlVM=
+                  - when: '2021-11-30T12:19:54.047Z'
+                    hashedToken: DRK+04CU+JKCnx/VP9Uu2jFDkZfkSKIylfC6noJJaIs=
+                  - when: '2021-11-30T12:19:54.141Z'
+                    hashedToken: 7b+Tdjqh7+fDroX22xpFYZH1ax+eh7NUUGzE/ssTCu0=
+                  - when: '2021-11-30T12:22:28.900Z'
+                    hashedToken: SdB3b6kCPFJoZe7qYcVjv5Ao8yyh2e/2VSxeXiHV37w=
+                  - when: '2021-11-30T12:22:29.001Z'
+                    hashedToken: nHDEUdnUopRqnRMDSsAniOwed8iTnWZCJMjkQenu7vY=
+                  - when: '2021-11-30T12:28:09.698Z'
+                    hashedToken: XXVHn3kbIQk+gcpNXzeRTJd/pxW5IKvkzk3/M5XHZGk=
+                  - when: '2021-11-30T12:28:09.801Z'
+                    hashedToken: 2DxzRHJa9t6lYguS2EA54zCthYE/5zfwQDTAvw5s1Uo=
+                  - when: '2021-11-30T12:31:59.489Z'
+                    hashedToken: dlqyokt22kpIhia0R8XVQcVhCOIK18ZaCiOdlTDYhHg=
+                  - when: '2021-11-30T12:31:59.582Z'
+                    hashedToken: UyRI0AIdiOK/fxzVZpKRKq8lPGX7A5zbtKE+U31ho3o=
+                  - when: '2021-11-30T12:33:48.248Z'
+                    hashedToken: eQET8vB7UDWCR0m6W78JD3ts6M+UHhCKkHCaJRhkYeA=
+                  - when: '2021-11-30T12:33:48.340Z'
+                    hashedToken: CATov6TdvXRpHel/CoNYIhvzotmhSAm6jSU++lTGvqc=
+                  - when: '2021-11-30T14:08:52.546Z'
+                    hashedToken: uoOjFznSqVne4Kg3ky+JvSCGNl4tK1EP0ynqYhKCuCE=
+                  - when: '2021-11-30T14:34:35.886Z'
+                    hashedToken: DbjmfLMVjBvhwu39VQliLJEZ+8GwkuJtzi9dDeTH11w=
+                  - when: '2021-11-30T14:34:35.984Z'
+                    hashedToken: wDA9azDwpeX6z1arxY2EWRzmIlmCwOBlUiaM0oak2Ts=
+                  - when: '2021-12-02T13:02:47.197Z'
+                    hashedToken: zR2fb29kzM8gd+cM9XWNiE/wH86EHFD3WD2W+ir4tm8=
+                  - when: '2021-12-06T17:18:51.383Z'
+                    hashedToken: mXfokvSWyWCtJvUKE9/IuD+cmZVtEK52xYKKjY4ZEfA=
+                  - when: '2021-12-06T17:18:51.488Z'
+                    hashedToken: VdvP3mw3IiASN1rE7akbS5ZUsSRdjfCXejg2hXqW+EY=
+                  - when: '2021-12-06T17:29:52.685Z'
+                    hashedToken: 7MbAK8VX5ON34B8llA04hbQnTqQuyQwEnXdRycmP2AE=
+                  - when: '2021-12-06T17:29:52.774Z'
+                    hashedToken: 1tYL259QmfI7aU99RON95v9aegE1FCuSw4Z/XdOUnzk=
+                  - when: '2021-12-15T13:41:44.561Z'
+                    hashedToken: RfnIBpaxyo0XRn09d0ZJ7QIPft4BzUZFOrEdP8QI6eE=
+                  - when: '2021-12-15T13:41:44.657Z'
+                    hashedToken: TB1ShQQ2oRpfY544REPXqzqg6/AdJuGDM+W59HL0Ui0=
+                  - when: '2021-12-15T13:41:50.582Z'
+                    hashedToken: ZB0Ug+1b/DO4sOtToCswBWI4k6ZyB8aIgqMP4KZD1dI=
+                  - when: '2021-12-15T13:41:50.678Z'
+                    hashedToken: FcIO2uWN5+Xx382cCoEUEZl1yCJwdTTGoPPTbCPhjVE=
+                  - when: '2021-12-15T13:44:17.009Z'
+                    hashedToken: cxBmRJageqXd1CCsqltYy6UIiGuLMi+bqD1Pems7kX4=
+                  - when: '2021-12-15T13:44:17.102Z'
+                    hashedToken: VxGvh02OrUIOcW1Lr/OBXqFWbl5cqlolconz7SgZS5g=
+                  - when: '2021-12-15T14:02:14.120Z'
+                    hashedToken: pfb2S1RBfWJwpfN30nbRLIX9kO9NupIBRRS1QRNLvhA=
+                  - when: '2021-12-15T14:02:14.222Z'
+                    hashedToken: +tI4k2G5+boUvXq93GlfM+oG1R4amde9Nk/ApcAKwO0=
+                  - when: '2021-12-15T14:02:28.096Z'
+                    hashedToken: f4rpBxf6P5GqMKfRcjwM//Wdpy1E3M/17VCzqgtvwds=
+                  - when: '2021-12-15T14:02:28.201Z'
+                    hashedToken: gnVFPN44RV2zChuTYG2wBY42bM5Rbd2lWrtObxVDsAQ=
+                  - when: '2021-12-15T14:12:35.899Z'
+                    hashedToken: Nh8AjBCn+PgX7IPKagw2SFiv4biMU72XF9b0DAmgrx4=
+                  - when: '2021-12-15T14:12:36.032Z'
+                    hashedToken: j05FN4tAboAFAesEBc8DYw7dpmaT2Erhoq7qF+FrtBo=
+                  - when: '2021-12-15T14:14:22.622Z'
+                    hashedToken: JwlVP+7H0EeqXMx8t8iGlVDBhCnILAz74aPTPjTZJNw=
+                  - when: '2021-12-15T14:14:22.712Z'
+                    hashedToken: z5Gn/KjwopOhPrQm3ZHdg8XKagUf9LlZ1AeCbsCpdeE=
+                  - when: '2022-01-03T18:47:47.024Z'
+                    hashedToken: hHE4aQTd6i51qQMiTpMUUGvt2FzJdXDsXKX2fD5Xheg=
+            emails:
+              - address: a@v.com
+                verified: false
+            type: user
+            status: online
+            active: true
+            roles:
+              - user
+              - admin
+            name: admin
+            lastLogin: '2022-01-03T18:48:53.363Z'
+            statusConnection: online
+            utcOffset: 2
+            username: admin
+            canViewAllInfo: true
+          success: true
