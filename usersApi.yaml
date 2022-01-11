@@ -7,7 +7,7 @@ servers:
 paths:
   /users:
     get:
-      summary: ''
+      summary: Get All Users
       operationId: get-user
       responses:
         '200':
@@ -342,7 +342,7 @@ paths:
     parameters: []
   '/users/{userId}':
     delete:
-      summary: ''
+      summary: Delete User
       operationId: delete-user
       responses:
         '200':
@@ -363,7 +363,7 @@ paths:
       parameters: []
       description: Deletes user with the specified `userId`
     get:
-      summary: ''
+      summary: Get User
       operationId: get-user
       responses:
         '200':
@@ -392,7 +392,7 @@ paths:
         required: true
         description: Id of the target User.
     put:
-      summary: ''
+      summary: Update User
       operationId: put-users
       responses:
         '200':
@@ -728,3 +728,15 @@ components:
             username: admin
             canViewAllInfo: true
           success: true
+  securitySchemes:
+    X-Auth-Token:
+      name: API Key
+      type: apiKey
+      in: header
+    X-User-Id:
+      name: API Key
+      type: apiKey
+      in: header
+security:
+  - API Key - 1: []
+  - X-User-Id: []
