@@ -38,9 +38,30 @@ paths:
                       customFields: {}
                 items:
                   $ref: '#/components/schemas/User'
+        parameters:
+          - schema:
+              type: string
+            in: header
+            name: X-Auth-Token
+            description: Auth token received on login
+          - schema:
+              type: string
+            in: header
+            name: X-User-Id
+            description: Logged User's Id
       description: |
         Returns list of all user accounts.
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: X-Auth-Token
+          description: Auth token received on login
+        - schema:
+            type: string
+          in: header
+          name: X-User-Id
+          description: Logged User's Id
     post:
       summary: Create New User
       operationId: post-user
@@ -338,7 +359,29 @@ paths:
                   verified: true
                   customFields: {}
         description: Post the necessary fields for the API to create a new user.
+        parameters:
+          - schema:
+              type: string
+            in: header
+            name: X-Auth-Token
+            description: Auth token received on login
+          - schema:
+              type: string
+            in: header
+            name: X-User-Id
+            description: Logged User's Id
       description: Create a new user.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: X-Auth-Token
+          description: Auth token received on login
+        - schema:
+            type: string
+          in: header
+          name: X-User-Id
+          description: Logged User's Id
     parameters: []
   '/users/{userId}':
     delete:
@@ -360,7 +403,17 @@ paths:
                 x-examples:
                   example-1:
                     success: true
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: X-Auth-Token
+          description: Auth token received on login
+        - schema:
+            type: string
+          in: header
+          name: X-User-Id
+          description: Logged User's Id
       description: Deletes user with the specified `userId`
     get:
       summary: Get User
@@ -383,7 +436,17 @@ paths:
                     emailVerified: true
                     signUpDate: '2019-08-24'
       description: Returns user with specified `userId`.
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: X-Auth-Token
+          description: Auth token received on login
+        - schema:
+            type: string
+          in: header
+          name: X-User-Id
+          description: Logged User's Id
     parameters:
       - schema:
           type: string
@@ -445,6 +508,17 @@ paths:
               required:
                 - data
       description: Updates user with the specified `userId`
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: X-Auth-Token
+          description: Auth token received on login
+        - schema:
+            type: string
+          in: header
+          name: X-User-Id
+          description: Logged User's Id
 components:
   schemas:
     User:
