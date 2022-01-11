@@ -57,11 +57,13 @@ paths:
           in: header
           name: X-Auth-Token
           description: Auth token received on login
+          required: true
         - schema:
             type: string
           in: header
           name: X-User-Id
           description: Logged User's Id
+          required: true
     post:
       summary: Create New User
       operationId: post-user
@@ -377,11 +379,13 @@ paths:
           in: header
           name: X-Auth-Token
           description: Auth token received on login
+          required: true
         - schema:
             type: string
           in: header
           name: X-User-Id
           description: Logged User's Id
+          required: true
     parameters: []
   '/users/{userId}':
     delete:
@@ -409,11 +413,13 @@ paths:
           in: header
           name: X-Auth-Token
           description: Auth token received on login
+          required: true
         - schema:
             type: string
           in: header
           name: X-User-Id
           description: Logged User's Id
+          required: true
       description: Deletes user with the specified `userId`
     get:
       summary: Get User
@@ -442,11 +448,13 @@ paths:
           in: header
           name: X-Auth-Token
           description: Auth token received on login
+          required: true
         - schema:
             type: string
           in: header
           name: X-User-Id
           description: Logged User's Id
+          required: true
     parameters:
       - schema:
           type: string
@@ -514,11 +522,13 @@ paths:
           in: header
           name: X-Auth-Token
           description: Auth token received on login
+          required: true
         - schema:
             type: string
           in: header
           name: X-User-Id
           description: Logged User's Id
+          required: true
 components:
   schemas:
     User:
